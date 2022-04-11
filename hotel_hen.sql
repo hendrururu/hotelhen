@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2022 at 02:36 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 7.3.33
+-- Generation Time: Apr 11, 2022 at 05:27 AM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -94,14 +94,21 @@ CREATE TABLE `pemesanan` (
 --
 
 INSERT INTO `pemesanan` (`id_pesanan`, `nama_pemesan`, `email`, `no_hp`, `nama_tamu`, `id_kamar`, `tgl_cekin`, `tgl_cekout`, `jml_kamar`, `Harga`, `PayBay`, `PayEND`, `Status_Kamar`, `RefPB`) VALUES
-(20, 'mina', 'mina@gmail.com', '0899872635412', 'are', 1, '2022-03-15', '2022-03-16', 3, 30000, 'Onsite', 0, '0', '031522Onsite080540'),
-(23, 'narila', 'mina@gmail.com', '0899872635412', 'are', 1, '2022-03-15', '2022-03-16', 3, 30000, 'Onsite', 0, '0', '031522Onsite080843'),
-(24, 'juara', 'niekasj@gmail.com', '089873323453', 'nuralah', 1, '2022-03-18', '2022-03-19', 1, 30000, 'Onsite', 0, '0', '031522Onsite083754'),
-(27, 'Kezara Dalviana', 'kezlovescat@gmail.com', '08997365452', 'Zara viana', 1, '2022-03-15', '2022-03-16', 2, 60000, 'Onsite', 0, '0', '031522Onsite085757'),
-(28, 'Kezara Dalviana', 'kezlovescat@gmail.com', '089921226789', 'Arzana Lurei', 2, '0000-00-00', '0000-00-00', 2, 40000, 'Bayar Di Tempat', 0, '0', '031522Bayar Di Tempat113649'),
-(29, 'Merlina Adriana', 'mina@gmail.com', '0844564423', 'merlina', 1, '0000-00-00', '0000-00-00', 0, 0, 'Bayar Di Tempat', 0, '0', '040922001232'),
-(30, 'Merlina Adriana', 'mina@gmail.com', '23231245', 'nuralah', 1, '2022-04-10', '2022-04-11', 2, 60000, 'Bayar Di Tempat', 0, '0', '040922001455'),
-(31, 'Merlina Adriana', 'druru@gmail.com', '121343', 'Zara viana', 3, '2022-04-09', '2022-04-07', 2, 2000000, 'Transfer Bank', 0, '0', '040922004644');
+(31, 'Merlina Adriana', 'druru@gmail.com', '121343', 'Zara viana', 3, '2022-04-09', '2022-04-07', 2, 2000000, 'Transfer Bank', 0, '0', '040922004644'),
+(41, 'Kezara Dalviana', 'rahmawatinovia61@gmail.com', '1124124', 'hayo', 1, '2022-04-12', '2022-04-13', 1, 30000, 'Bayar Di Tempat', 0, '0', '041122040929'),
+(42, 'Kezara Dalviana', 'rahmawatinovia61@gmail.com', '0283492', 'hayo', 2, '2022-04-12', '2022-04-13', 1, 20000, 'Bayar Di Tempat', 0, '0', '041122045538');
+
+--
+-- Triggers `pemesanan`
+--
+DELIMITER $$
+CREATE TRIGGER `booking` AFTER INSERT ON `pemesanan` FOR EACH ROW BEGIN
+UPDATE tipe_room set Stok
+= Stok-NEW.jml_kamar
+WHERE id=NEW.id_kamar;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -125,7 +132,7 @@ CREATE TABLE `tipe_room` (
 
 INSERT INTO `tipe_room` (`id`, `Nama_room`, `harga`, `Stok`, `onuse`, `onbook`, `img_room`) VALUES
 (1, 'VIP23', 30000, 12, 0, 0, 'https://asset.kompas.com/crops/33vZ6Rt128kzOfcC_aU3fy7oo0I=/0x36:640x463/750x500/data/photo/2020/07/10/5f081b41cc76c.jpeg'),
-(2, 'Deluxkeren', 20000, 10, 0, 0, 'https://arsitagx-master.s3.ap-southeast-1.amazonaws.com/img_large/1889/988/6193/photo-hotel-room-1-sultan-hotel-at-senayan-desain-arsitek-oleh-yaph-studio.jpeg'),
+(2, 'Deluxkeren', 20000, 9, 0, 0, 'https://arsitagx-master.s3.ap-southeast-1.amazonaws.com/img_large/1889/988/6193/photo-hotel-room-1-sultan-hotel-at-senayan-desain-arsitek-oleh-yaph-studio.jpeg'),
 (3, 'Unisharp', 1000000, 30, 0, 0, 'https://codebeautify.org/img/slogo.webp');
 
 -- --------------------------------------------------------
@@ -207,7 +214,7 @@ ALTER TABLE `f_kamar`
 -- AUTO_INCREMENT for table `pemesanan`
 --
 ALTER TABLE `pemesanan`
-  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `tipe_room`
@@ -220,6 +227,16 @@ ALTER TABLE `tipe_room`
 --
 ALTER TABLE `users`
   MODIFY `id_login` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `pemesanan`
+--
+ALTER TABLE `pemesanan`
+  ADD CONSTRAINT `pemesanan_ibfk_1` FOREIGN KEY (`id_kamar`) REFERENCES `tipe_room` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
